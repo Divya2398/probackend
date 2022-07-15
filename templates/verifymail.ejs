@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VERIFY EMAIL</title>
+    <style>
+      body {
+        background-color: #fff8dc;
+      }
+      table {
+        height: 500px;
+        width: 600px;
+        border: 0;
+        border-collapse: collapse;
+        margin: 0px auto;
+        margin-top: 100px;
+      }
+      .title {
+        font-style: italic;
+        font-weight: bold;
+        text-align: left;
+        color: #eee8aa;
+      }
+      .button {
+        background-color: #bc8f8f;
+        margin: auto;
+        align-items: center;
+        height: 80px;
+        border-radius: 25%;
+        font-size: 20px;
+        font-style: italic;
+        color: #ffd700;
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr height="25%">
+        <td bgcolor="#BC8F8F" border="0px">
+          <h1 class="title">VERIFY YOUR EMAIL</h1>
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#FA8072" border="0px">
+          <h2
+            style="
+              font-size: 300%;
+              font-weight: 400;
+              text-align: center;
+              color: #eee8aa;
+              font-style: italic;
+            "
+          >
+            Welcome!
+          </h2>
+          <pre
+            style="
+              font-size: 150%;
+              font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman',
+                serif;
+              color: #ffd700;
+            "
+          >
+  VERIFY YOUR EMAIL BY CLICKING THE BUTTON BELOW 
+                          AND GET STARTED</pre
+          >
+        </td>
+      </tr>
+      <tr height="25%">
+        <td bgcolor="#FA8072" border="0px">
+          <button class="button"><a href = http://localhost:7000/v1/user/email-verification/<%=details.Email%>>VERIFY HERE</a></button>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
