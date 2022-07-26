@@ -3,7 +3,7 @@ const ejs = require("ejs");
 const { join } = require("path");
 const sgMail = require("@sendgrid/mail");
 const API_KEY =
-  "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";
+  "***************************************************************";
 sgMail.setApiKey(API_KEY);
 
 // const transporter = nodemailer.createTransport({
