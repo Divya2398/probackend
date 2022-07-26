@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service mail</title>
+    <style>
+      .container{
+        border: 1px solid rgb(224, 221, 221);
+        border-radius: 20px;
+        background-image: linear-gradient(
+            rgb(131, 192, 228),
+            rgb(214, 105, 207),
+            rgb(255, 204, 112)
+          );
+          background-color: rgb(236, 161, 203);
+        padding: 20px 40px;
+        width: 550px;
+        margin: auto;
+        font-size: 18px;
+        line-height: 2;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .text-style{
+          color:rgb(255, 253, 253)
+      }
+      .list-style{
+          color:rgb(145, 9, 127)
+      }
+      h4{
+          color: rgb(63, 62, 62);
+      }
+    </style>
+  </head>
+ 
+  <body>
+    <div class ="container">
+      <p
+      class="text-style">
+        Your Post has been Reported by a User.So temporarily we have taken down
+        your post.
+      </p  class="text-style">
+      <h4>Post Detail</h4>
+      <ul  class="list-style">
+      <li>Post Title: <%=details.title%></li>
+      <li>Posted On: <%=details.date%></li>
+    </ul>
+      <p  class="text-style">
+        The reason for the post has been Reported may be one among the following
+        Reason
+      </p>
+      <ul  class="list-style">
+        <li>User may found your post has inappropriate content</li>
+        <li>Your Content may violates our Community Guidelines</li>
+        <li>Your Content may not be appropriate for younger audiences</li>
+        <li>Accidently they might reported your post</li>
+      </ul>
+      <p  class="text-style">
+        If you think your Post content has not violated for Terms and Condition,
+        kindly respond directly to this Email as soon as possible.we will review
+        your Post. If our review team has not found any violations,Your post
+        status will be enabled. We apologize for any inconvenience this may have
+        caused.
+      </p>
+      <p  class="text-style">
+        If you have any doubts in our<span>Terms and condition</span> .check Our Terms and
+        Condition page.If you think Your post Topic Or Content violated Our
+        Terms and Condition Guideline,do the following
+        <ul  class="list-style">
+            <li>Please Delete Your Post which has inappropriate Content</li>
+            <li>Or else try to remove and update inappropriate title , phrase or content from your post.
+             After Updating your post , Ask for review directly to this Email</li>
+        </ul>
+      </p>
+    </div>
+  </body>
+</html>

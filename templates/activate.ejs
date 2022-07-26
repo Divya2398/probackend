@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service mail</title>
+    <style>
+      .container {
+        border: 1px solid rgb(224, 221, 221);
+        background-image: linear-gradient(
+          rgb(131, 192, 228),
+          rgb(214, 105, 207),
+          rgb(255, 204, 112)
+        );
+        background-color: rgb(236, 161, 203);
+        border-radius: 20px;
+
+        padding: 20px 50px;
+        width: 500px;
+        margin: auto;
+        margin-top: 50px;
+        font-size: 17px;
+        line-height: 2;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .text-style {
+        color: rgb(87, 85, 85);
+        text-align: center;
+      }
+      .content-style {
+        color: rgb(253, 253, 253);
+        font-weight: bold;
+        text-align: justify;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2 class="text-style">Post Activation</h2>
+      <p lass="content-style">
+        Based On Your Request Our review Team has reviewed your Post and as we
+        found your post has not violated Our Trems and Condition.We have
+        Activated Your Post Again. We apologize for the inconvenience caused.
+      </p>
+      <p class="content-style">
+        Your post (Post Title :<%=details.title%>) is Activated again.
+      </p>
+    </div>
+  </body>
+</html>
