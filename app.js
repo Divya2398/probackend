@@ -2,14 +2,17 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-// const multer = require("multer");
+const path = require("path");
+const multer = require("multer");
 
 const userRouter = require("./routes/userroute");
 const postRouter = require("./routes/postroute");
 const categoryRouter = require("./routes/categoryroute");
+const commentRouter = require("./routes/commentroute");
 const app = express();
 dotenv.config();
 app.use(cors());
+app.use("/images", express.static(path.join(__dirname, "/images")));
 
 const port = 7000;
 
@@ -34,28 +37,29 @@ mongoose
 
 //multer
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "images");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, req.body.name);
-//   },
-// });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
 
-// const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
-// app.post("/api/upload/", upload.single("file"), (req, res) => {
-//   return res
-//     .status(200)
-//     .json({ status: "success", message: "file has been uploaded" });
-// });
+app.post("/api/upload/", upload.single("file"), (req, res) => {
+  return res
+    .status(200)
+    .json({ status: "success", message: "file has been uploaded" });
+});
 
 //routes
 app.use(express.json());
 app.use("/v1/user", userRouter);
 app.use("/v2/postApi", postRouter);
 app.use("/v3/category", categoryRouter);
+app.use("/v4/comments", commentRouter);
 
 app.listen(port, () => {
   console.log(`server started at:http://localhost:${port}`);
