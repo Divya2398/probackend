@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     firstloginstatus: { type: Boolean, required: false, default: true },
+    otp: { type: Number, required: false },
   },
   {
     timestamps: true,
