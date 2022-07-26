@@ -4,6 +4,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+const twillo = require("twilio")(
+  "ACbc2e05acfab21e5823802a77fbd2568b",
+  "36ef697dac8ded88557c81028892fa0a"
+);
+
 const userSchema = require("../models/usermodel");
 const { usertestSchema } = require("../validation/joi");
 const { mail_to_customer, sendEmail } = require("../middleware/email");
@@ -11,6 +16,7 @@ const PostSchema = require("../models/postmodel");
 // const sendEmail = require("../middleware/email");
 const Token = require("../models/tokenmodel");
 const { Admin, authverify } = require("../middleware/auth");
+const verifyotp = require("../middleware/sms");
 
 router.post("/user-signup", async (req, res) => {
   try {
@@ -175,8 +181,8 @@ router.post("/forget-password", async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       }).save();
     }
-    const link = `http://localhost:7000/v1/user/password-reset/${user._id}/${token.token}`;
-    let email = await sendEmail(user.Email, "Password reset", link);
+    const url = `http://localhost:7000/v1/user/password-reset/${user._id}/${token.token}`;
+    let email = await sendEmail(user.Email, "Password reset", url);
     res
       .status(200)
       .send({ message: "password reset link is sent to your email account" });
@@ -191,12 +197,16 @@ router.post("/forget-password", async (req, res) => {
 router.get("/password-reset/:id/:token", async (req, res) => {
   try {
     const user = await userSchema.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).send({ message: "Invalid Link" });
+    if (!user) {
+      return res.status(400).send({ message: "Invalid Link" });
+    }
     const token = await Token.findOne({
       userId: user._id,
       token: req.params.token,
     });
-    if (!token) return res.status(400).send({ message: "Invalid link" });
+    if (!token) {
+      return res.status(400).send({ message: "Invalid link" });
+    }
     res.status(200).send({ message: "Valid Url" });
   } catch (error) {
     res
@@ -256,23 +266,46 @@ router.post("/user-logout", async (req, res) => {
 
 //update user
 
-router.put("/update/:uuid", async (req, res) => {
-  if (req.body.uuid === req.params.uuid) {
+router.put("/update/:_id", async (req, res) => {
+  console.log(req.params._id);
+  console.log(req.body);
+  if (req.body._id === req.params._id) {
     try {
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = bcrypt.hash(req.body.password, salt);
+      if (req.body.UserName) {
+        const find = await userSchema.findOne({ UserName: req.body.UserName });
+        if (!find) {
+          const update = await userSchema.findOneAndUpdate(
+            { _id: req.params._id },
+            {
+              $set: req.body,
+            },
+            { new: true }
+          );
+          res.status(200).json({
+            status: "success",
+            message: "user updated successfully",
+            result: update,
+          });
+        } else {
+          res.status(400).json({
+            status: "failure",
+            message: "UserName already exist",
+          });
+        }
+      } else {
+        const user = await userSchema.findOneAndUpdate(
+          { _id: req.params._id },
+          {
+            $set: req.body,
+          },
+          { new: true }
+        );
+        res.status(200).json({
+          status: "success",
+          message: "user updated successfully",
+          result: user,
+        });
       }
-      const update = await userSchema.findOneAndUpdate(
-        { uuid: req.params.uuid },
-        {
-          $set: req.body,
-        },
-        { new: true }
-      );
-      res
-        .status(200)
-        .json({ message: "user updated successfully", result: update });
     } catch (error) {
       res.status(500).json(err);
     }
@@ -283,25 +316,21 @@ router.put("/update/:uuid", async (req, res) => {
 // $2b$10$bnZFHXDtB1017raZ3c4AXezkgPydW/FFRP.7ImCfEY9M8VJZd4zxa
 
 //delete user
-router.delete("/delete/account/:uuid", async (req, res) => {
-  if (req.body.uuid === req.params.uuid) {
+router.delete("/delete-account/:uuid", async (req, res) => {
+  try {
+    const user = await userSchema.findOne({ uuid: req.params.uuid });
     try {
-      const user = await userSchema.findOne({ uuid: req.params.uuid });
-      try {
-        await PostSchema.deleteMany({ UserName: user.UserName });
-        await userSchema.findOneAndDelete({ uuid: req.params.uuid });
-        res.status(200).json({
-          status: "success",
-          message: "your account has been deleted",
-        });
-      } catch (error) {
-        res.status(500).json(err);
-      }
+      await PostSchema.deleteMany({ UserName: user.UserName });
+      await userSchema.findOneAndDelete({ uuid: req.params.uuid });
+      res.status(200).json({
+        status: "success",
+        message: "your account has been deleted",
+      });
     } catch (error) {
-      res.status(500).json("User not found");
+      res.status(500).json(err);
     }
-  } else {
-    res.status(401).json("you can only delete your account");
+  } catch (error) {
+    res.status(500).json("User not found");
   }
 });
 
@@ -350,4 +379,42 @@ router.get("/all-user", async (req, res) => {
     return res.status(500).json(error.message);
   }
 });
+
+router.post("/sms/:", async (req, res) => {
+  try {
+    twillo.messages
+      .create({
+        from: "+16012025001",
+        to: "+917339080287",
+        body: "your reset password otp :",
+      })
+      .then((mms) => {
+        console.log("sms sended");
+      })
+      .catch((err) => {
+        console.log("err", err.message);
+      });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+//contact us
+
+router.post("/contact", async (req, res) => {
+  try {
+    console.log(req.body);
+    const subject = "User query";
+    let email = await sendEmail(req.body.to, subject, req.body.text);
+    return res.send({
+      status: "success",
+      message: "query sent to admin",
+      // data: email,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.send(error.message);
+  }
+});
+
 module.exports = router;
